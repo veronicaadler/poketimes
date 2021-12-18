@@ -1,23 +1,12 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
-import Pokeball from '../pokeball.png'
+import Pokeball from '../pokeball.png';
+import { connect } from 'react-redux'
 
 class Home extends Component {
-  state = {
-    posts: []
-  }
-  componentDidMount(){
-    axios.get('https://jsonplaceholder.typicode.com/posts/')
-      .then(res => {
-        console.log(res);
-        this.setState({
-          posts: res.data.slice(0,10)
-        });
-      })
-  }
+
   render(){
-    const { posts } = this.state
+    const { posts } = this.props;
     const postList = posts.length ? (
       posts.map(post => {
         return (
@@ -47,4 +36,14 @@ class Home extends Component {
   }
 }
 
-export default Home
+//data from the store is mapped to the props of the component in order to access it.
+const mapStateToProps = (state) => {
+  return {
+    posts: state.posts //this object represents the different properties we want to add 
+    //to the props in this component.
+  }
+}
+//connect is a function that returns a higher order component.
+//it must first be invoked, then the higher order component wraps the Home component.
+//mapStateToProps is added to the connection function so that it knows what data to watch for
+export default connect(mapStateToProps)(Home) 
